@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink,withRouter } from 'react-router-dom';
 import '../../styles/style.css';
 
 class Register extends Component {
@@ -10,7 +10,7 @@ class Register extends Component {
                     <nav className="navigation">
                         <h2>OLX</h2>
                         <ul>
-                            <li><NavLink exact to="/">Home</NavLink></li>
+                            <li><NavLink exact to="/home">Home</NavLink></li>
                             {this.props.isLogged ?
                                 (
                                     <Fragment>
@@ -43,4 +43,4 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default withRouter(Register);
