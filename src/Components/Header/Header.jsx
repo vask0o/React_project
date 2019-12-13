@@ -6,7 +6,7 @@ import { AuthContext } from "../../App";
 
 export const Header = () => {
     const { state, dispatch } = React.useContext(AuthContext);
-    console.log(AuthContext)
+    
     return (
       <nav className="navigation" id="navigation">
         <h1 href="#" className="logo">

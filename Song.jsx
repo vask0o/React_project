@@ -1,10 +1,10 @@
 import React from "react";
-import { SongContext } from "../Home/Home";
+import { ItemContext } from "../Home/Home";
 import { AuthContext } from "../../App";
 
-const AddSong = (props) => {
-    console.log(React.useContext(SongContext))
-  const { state, dispatch } = React.useContext(SongContext);
+const CreateItem = (props) => {
+    console.log(React.useContext(ItemContext))
+  const { state, dispatch } = React.useContext(ItemContext);
   const { state: authState } = React.useContext(AuthContext);
 
   const [title, setTitle] = React.useState("");
@@ -138,4 +138,4 @@ const AddSong = (props) => {
     );
 };
 
-export default AddSong;
+export default CreateItem;

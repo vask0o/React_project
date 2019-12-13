@@ -27,28 +27,23 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
+
   switch (action.type) {
     case "LOGIN":
-        console.log(action.payload)
-       if(action.payload.username) {sessionStorage.setItem("user", JSON.stringify(action.payload.username)) };
-        if(action.payload.token){sessionStorage.setItem("token", JSON.stringify(action.payload.token)) };
+       
+        sessionStorage.setItem("username", JSON.stringify(action.payload.username)) ;
+        sessionStorage.setItem("token", JSON.stringify(action.payload.token)) ;
        sessionStorage.setItem("isAdmin", JSON.stringify(action.payload.isAdmin)) ;
-       if(action.payload.userId){sessionStorage.setItem("userId", JSON.stringify(action.payload.userId)) };
-      
-       console.log(state)
-       debugger;
+      sessionStorage.setItem("userId", JSON.stringify(action.payload.userId)) ;
+
       return {
         ...state,
         isAuthenticated: true,
-        username: sessionStorage.getItem('username'),
-        token: sessionStorage.getItem('token'),
-        isAdmin: sessionStorage.getItem('isAdmin'),
-        userId: sessionStorage.getItem('userId')
-       
-        
-   
-  
-       };
+        username: action.payload.username,
+        token: action.payload.token,
+        isAdmin: action.payload.isAdmin,
+        userId: action.payload.userId
+       }
    
     case "LOGOUT":
       sessionStorage.clear();
@@ -66,16 +61,13 @@ function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   React.useEffect(() => {
+    console.log(state)
     const username =  sessionStorage.getItem('username') 
     const token = sessionStorage.getItem('token') 
     const isAdmin = sessionStorage.getItem('isAdmin')
     const userId = sessionStorage.getItem('userId') 
-    
-    
-  
-    if(username && token){
-      state.isAuthenticated=true;
-      dispatch({
+  if(username && token){
+  dispatch({
         type: 'LOGIN',
         payload: {
           username,
@@ -84,14 +76,12 @@ function App() {
           ,userId
         }
       })
+      
      
      
-    } else {
-      state.isAuthenticated=false;
     }
-   
-    
-  }, [])
+  
+     }, [])
   return (
     <Fragment>
     <Router>
@@ -117,6 +107,7 @@ function App() {
       <Route path='/login' render={() => <Login/>}/>
       <Route path='/home' component={Home}/>
       <Route path='/create' component={Create}/>
+      <Route path='/register' component={Register}/>
       
     </AuthContext.Provider>
     </Switch>
