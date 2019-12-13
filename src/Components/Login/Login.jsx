@@ -50,7 +50,7 @@ export const Login = () => {
       })
       .then(resJson => {
         console.log(resJson)
-        debugger;
+        
         dispatch({
             type: "LOGIN",
             payload: resJson

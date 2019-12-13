@@ -1,7 +1,14 @@
-import React, { Component, Fragment } from 'react';
-import { Route,BrowserRouter as Router, Switch, Redirect ,withRouter } from 'react-router-dom';
+import React, {
+  Fragment
+} from 'react';
+import {
+  Route,
+  BrowserRouter as Router,
+  useHistory,
+  Switch,
+  withRouter
+} from 'react-router-dom';
 
-import PrivateRoute from 'react-private-route'
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
@@ -13,8 +20,10 @@ import Create from './Components/Create/Create';
 import Edit from './Components/Edit/Edit';
 import Footer from './Components/Footer/Footer';
 import Details from './Components/Details/Details';
+import Map from '../src/map';
 
- 
+
+
 
 export const AuthContext = React.createContext();
 //sessionStorage.clear();
@@ -25,35 +34,38 @@ const initialState = {
   token: null,
   userId: null
 };
-
+const history=useHistory();
 const reducer = (state, action) => {
 
   switch (action.type) {
     case "LOGIN":
-       
-        sessionStorage.setItem("username", JSON.stringify(action.payload.username)) ;
-        sessionStorage.setItem("token", JSON.stringify(action.payload.token)) ;
-       sessionStorage.setItem("isAdmin", JSON.stringify(action.payload.isAdmin)) ;
-      sessionStorage.setItem("userId", JSON.stringify(action.payload.userId)) ;
+
+      sessionStorage.setItem("username", (action.payload.username));
+      sessionStorage.setItem("token", (action.payload.token));
+      sessionStorage.setItem("isAdmin", (action.payload.isAdmin));
+      sessionStorage.setItem("userId", (action.payload.userId));
 
       return {
         ...state,
         isAuthenticated: true,
-        username: action.payload.username,
-        token: action.payload.token,
-        isAdmin: action.payload.isAdmin,
-        userId: action.payload.userId
-       }
-   
-    case "LOGOUT":
-      sessionStorage.clear();
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: null
-      };
-    default:
-      return state;
+          username: action.payload.username,
+          token: action.payload.token,
+          isAdmin: action.payload.isAdmin,
+          userId: action.payload.userId
+      }
+
+      case "LOGOUT":
+        sessionStorage.clear();
+        history.pushState('/')
+        return {
+          ...state,
+          isAuthenticated: false,
+            user: null
+        }
+        
+
+              default:
+                return state;
   }
 };
 
@@ -62,26 +74,87 @@ function App() {
 
   React.useEffect(() => {
     console.log(state)
-    const username =  sessionStorage.getItem('username') 
-    const token = sessionStorage.getItem('token') 
+    const username = sessionStorage.getItem('username')
+    const token = sessionStorage.getItem('token')
     const isAdmin = sessionStorage.getItem('isAdmin')
-    const userId = sessionStorage.getItem('userId') 
-  if(username && token){
-  dispatch({
+    const userId = sessionStorage.getItem('userId')
+    if (username && token) {
+      dispatch({
         type: 'LOGIN',
         payload: {
           username,
           token,
-          isAdmin
-          ,userId
+          isAdmin,
+          userId
         }
       })
-      
+      dispatch({
+        type: "FETCH_ITEMS_REQUEST"
+      });
+      fetch("https://hookedbe.herokuapp.com/api/items", {
+        headers: {
+          
+        }
+      })
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw res;
+          }
+        })
+        .then(resJson => {
+          console.log(resJson);
+          dispatch({
+            type: "FETCH_ITEMS_SUCCESS",
+            payload: resJson
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          dispatch({
+            type: "FETCH_ITEMS_FAILURE"
+          });
+        });
+    dispatch({
+      type: "ADD_ITEM_REQUEST"
+  })
+  debugger;
+  const item = {
+    
+  };
+fetch("https://hookedbe.herokuapp.com/api/items", {
+    method: "POST",
+    headers: {
      
-     
-    }
+      "Content-Type": `application/json`
+    },
+    body: JSON.stringify(item),
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        throw res;
+      }
+    })
+    .then(data => {
+        
+        dispatch({
+            type: "ADD_ITEM_SUCCESS",
+            payload: data
+        })
+       
+    })
+    .catch(error => {
+        dispatch({
+            type: "ADD_ITEM_FAILURE"
+        })
+    })
   
-     }, [])
+
+  }
+}, [])
   return (
     <Fragment>
     <Router>
@@ -108,6 +181,8 @@ function App() {
       <Route path='/home' component={Home}/>
       <Route path='/create' component={Create}/>
       <Route path='/register' component={Register}/>
+      <Route path='/details' component={Map}/>
+
       
     </AuthContext.Provider>
     </Switch>
@@ -117,4 +192,5 @@ function App() {
   );
 }
 
-export default withRouter(App)
+
+  export default withRouter(App)

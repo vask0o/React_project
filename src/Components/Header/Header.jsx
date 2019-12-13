@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { NavLink,withRouter } from 'react-router-dom';
+import React, {Fragment } from 'react';
+import { NavLink} from 'react-router-dom';
 import '../../styles/style.css';
 
 import { AuthContext } from "../../App";

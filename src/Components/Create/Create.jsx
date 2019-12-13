@@ -1,92 +1,102 @@
 import React from "react";
-import { ItemContext } from "../Home/Home";
+
 import { AuthContext } from "../../App";
-import {withRouter} from 'react-router-dom';
+import {withRouter,useHistory} from 'react-router-dom';
 import '../../styles/style.css';
 
 
-export const Create = (props) => {
-  const { state, dispatch } = React.useContext(ItemContext);
-  const { state: authState } = React.useContext(AuthContext);
-  let {test}=React.useState("");
-console.log(test)
-console.log(test)
-  const [itemName, setItemName] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [imageUrl, setImageUrl] = React.useState("");
-  const [price, setPrice] = React.useState("");
-  const [author, setAuthor] = React.useState("");
-  const [status, setStatus] = React.useState("");
+export const Create = () => {
+  const history=useHistory();
+    const {dispatch } = React.useContext(AuthContext);
+   debugger;
+    const initialState = {
+         
+            itemName:"",
+            description:"",
+            imageUrl:"",
+            price:"",
+            status:"Pending",
+            author:sessionStorage.getItem('userId'),
+        
+       
+      };
+      
+      const [data, setData] = React.useState(initialState);
 
+      const handleInputChange = event => {
+        setData({
+          ...data,
+          [event.target.name]: event.target.value
+        });
+      };
+  
 
-  const onClose = e => {
-    props.onClose && props.onClose(e);
-  };
-
-  const isButtonDisabled = itemName === "" || description === "" || imageUrl === "" ||price === "" || state.isItemSubmitting;
-  console.log(state.authState)
-  const onSubmit = () => {
-      dispatch({
-          type: "ADD_ITEM_REQUEST"
-      })
-      const item = {
-        "itemName": itemName,
-        "imageUrl": imageUrl,
-        "description": description,
-        "price":price,
-        "author":'',
-        "status": 'Pending',
-     };
-     debugger;
-    fetch("http://localhost:9999/crud/createItem", {
-        method: "POST",
-        headers: {
+  
+  const handleFormSubmit = event => {
+      console.log('submit')
+    event.preventDefault(History);
+    console.log(data)
+    setData({
+      ...data,
+      isSubmitting: true,
+      errorMessage: null
+    });
+    //const isButtonDisabled = data.itemName === "" || data.description === "" || data.imageUrl === "" ||data.price === "" || data.isItemSubmitting;
+debugger;
+    fetch("http://localhost:9999/crud/item/create", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      
+      body: JSON.stringify({
+         
+        itemName: data.itemName,
+        description: data.description,
+        imageUrl:data.imageUrl,
+        price:data.price,
+        status:data.status,
+        author:data.author
           
-          "Content-Type": `application/json`
-        },
-        body: JSON.stringify(item),
       })
-        .then(res => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw res;
-          }
-        })
-        .then(data => {
-            console.log(data);
-            setStatus("");
-            setAuthor("");
-            setImageUrl("");
-            setPrice("");
-            setItemName("");
-            setDescription("");
+      
+    })
+      .then(res => {
+          console.log(res)
+        if (res.ok) {
             
-            dispatch({
-                type: "ADD_ITEM_SUCCESS",
-                payload: data
-            })
-            onClose();
-        }).catch(error => {
-            dispatch({
-                type: "ADD_ITEM_FAILURE"
-            })
+          return res.json();
+        }
+        throw res;
+      })
+      .then(resJson => {
+        
+        console.log(resJson)
+        
+        dispatch({
+            type: "ADD_ITEM_REQUEST",
+            payload: resJson
+            
         })
-  }
-    if (!props.show) {
-      return null;
-    }
+        history.push('/')
+     })
+      
+      .catch(error => {
+        setData({
+          ...data,
+          isSubmitting: false,
+          errorMessage: error.message || error.statusText
+        });
+      });
+  };
     return (
       <div className="create-item" id="modal">
-       <div className="modal-table-container">
-        <div className="modal-table-cell">
-         <div className="modal-overlay small">
-              <div className="modal-header">
+       
                 <h1 className="modal-title">
                   CREATE ITEM
                 </h1>
-              </div>
-              <form className="modal-form">
+             
+              <form  onSubmit={handleFormSubmit} className="modal-form">
                 <div className="modal-form-inputs">
 
                 <label htmlFor="itemName">itemName</label>
@@ -94,8 +104,8 @@ console.log(test)
                     id="itemName"
                     name="itemName"
                     type="text"
-                    value={itemName}
-                    onChange={e => setItemName(e.target.value)}
+                    value={data.itemName}
+                    onChange={handleInputChange}
                     className="text-input"
                     />
 
@@ -104,8 +114,8 @@ console.log(test)
                     id="description"
                     name="description"
                     type="text"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
+                    value={data.description}
+                    onChange={handleInputChange}
                     className="text-input"
                     />
 
@@ -114,8 +124,8 @@ console.log(test)
                     id="imageUrl"
                     name="imageUrl"
                     type="text"
-                    value={imageUrl}
-                    onChange={e => setImageUrl(e.target.value)}
+                    value={data.imageUrl}
+                    onChange={handleInputChange}
                     className="text-input"
                     />
                 </div>
@@ -125,44 +135,31 @@ console.log(test)
                     id="price"
                     name="price"
                     type="text"
-                    value={price}
-                    onChange={e => setPrice(e.target.value)}
+                    value={data.price}
+                    onChange={handleInputChange}
                     className="text-input"
                     />
                 </div>
-                
-
-
-                
-                <div className="form-error">
+                 <div className="form-error">
                       <p>
-                        {state.itemHasError && "Error Creating ITEM!"}
+                      {data.errorMessage && (
+              <span className="form-error">{data.errorMessage}</span>
+            )}
                       </p>
                 </div>
                 <div className="form-action clearfix">
-                    <button
-                      type="button"
-                      id="overlay-confirm-button"
-                      className="button button-primary"
-                      onClick={onSubmit}
-                      disabled={isButtonDisabled}
-                    >
-                      {state.isItemSubmitting ? "Submitting..." : "Submit"}
-                    </button>
-                    <button
-                      type="button"
-                      id="overlay-cancel-button"
-                      className="button button-default small close-overlay pull-right"
-                      onClick={onClose}
-                    >
-                          Cancel
-                    </button>
+                <button disabled={data.isSubmitting}>
+              {data.isSubmitting ? (
+                <p>loading</p>
+              ) : (
+                "ADD_ITEM_REQUEST"
+              )}
+            </button>
+                   
                 </div>
               </form>
         </div>
-        </div>
-       </div>
-      </div>
+       
     );
 };
 

@@ -17,7 +17,9 @@ module.exports = {
         next(error);
       });
   },
+  
   createItem: (req, res) => {
+    
     const itemObj = req.body;
     Item.create(itemObj)
       .then((item) => {

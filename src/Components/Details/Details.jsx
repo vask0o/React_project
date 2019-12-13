@@ -1,7 +1,6 @@
 import React, { Component,Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import {  toast } from 'react-toastify';
-import axios from 'axios';
 import '../../styles/style.css';
 
 class Details extends Component {

@@ -15,24 +15,24 @@ const CreateItem = (props) => {
     props.onClose && props.onClose(e);
   };
 
-  const isButtonDisabled = title === "" || artist === "" || imageUrl === "" || state.isSongSubmitting;
+  const isButtonDisabled = title === "" || artist === "" || imageUrl === "" || state.isitemsubmitting;
 
   const onSubmit = () => {
       dispatch({
-          type: "ADD_SONG_REQUEST"
+          type: "ADD_ITEM_REQUEST"
       })
-      const song = {
+      const item = {
         "title": title,
         "imageUrl": imageUrl,
         "artist": artist
       };
-    fetch("https://hookedbe.herokuapp.com/api/songs", {
+    fetch("https://hookedbe.herokuapp.com/api/items", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${authState.token}`,
           "Content-Type": `application/json`
         },
-        body: JSON.stringify(song),
+        body: JSON.stringify(item),
       })
         .then(res => {
           if (res.ok) {
@@ -47,13 +47,13 @@ const CreateItem = (props) => {
             setTitle("");
             setImageUrl("");
             dispatch({
-                type: "ADD_SONG_SUCCESS",
+                type: "ADD_ITEM_SUCCESS",
                 payload: data
             })
             onClose();
         }).catch(error => {
             dispatch({
-                type: "ADD_SONG_FAILURE"
+                type: "ADD_ITEM_FAILURE"
             })
         })
   }
@@ -67,7 +67,7 @@ const CreateItem = (props) => {
          <div className="modal-overlay small">
               <div className="modal-header">
                 <h1 className="modal-title">
-                  ADD NEW SONG
+                  ADD NEW ITEM
                 </h1>
               </div>
               <form className="modal-form">
@@ -108,7 +108,7 @@ const CreateItem = (props) => {
                 
                 <div className="form-error">
                       <p>
-                        {state.songHasError && "Error Creating Song!"}
+                        {state.itemHasError && "Error Creating item!"}
                       </p>
                 </div>
                 <div className="form-action clearfix">
@@ -119,7 +119,7 @@ const CreateItem = (props) => {
                       onClick={onSubmit}
                       disabled={isButtonDisabled}
                     >
-                      {state.isSongSubmitting ? "Submitting..." : "Submit"}
+                      {state.isitemsubmitting ? "Submitting..." : "Submit"}
                     </button>
                     <button
                       type="button"

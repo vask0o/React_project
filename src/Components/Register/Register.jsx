@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { withRouter,BrowserRouter,useHistory, } from 'react-router-dom';
-import {navigate} from 'react-router';
+import React from 'react';
+import { withRouter,useHistory, } from 'react-router-dom';
 import { AuthContext } from "../../App";
 
 export const Register = () => {
