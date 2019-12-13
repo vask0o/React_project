@@ -7,7 +7,7 @@ import '../../styles/style.css';
 class Details extends Component {
     
     render() {
-        console.log(this.props)
+        
         let currentProduct = {};
         this.props.items.forEach(element => {
             if (element._id === this.props.match.params.id) {
@@ -21,7 +21,7 @@ class Details extends Component {
                 _id: id,
                 status:status
             }
-            console.log(data)
+            
             
             fetch('http://localhost:9999/crud/item/edit', {
                 method: "PUT",

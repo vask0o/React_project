@@ -10,6 +10,7 @@ export const Login = () => {
     username:"",
     password: "",
     isSubmitting: false,
+    isAdmin:false,
     errorMessage: null
   };
 
@@ -48,9 +49,12 @@ export const Login = () => {
         throw res;
       })
       .then(resJson => {
+        console.log(resJson)
+        debugger;
         dispatch({
             type: "LOGIN",
             payload: resJson
+            
         })
        
         history.push('/home')
