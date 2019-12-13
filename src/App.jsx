@@ -13,6 +13,7 @@ import Create from './Components/Create/Create';
 import Edit from './Components/Edit/Edit';
 import Footer from './Components/Footer/Footer';
 import Details from './Components/Details/Details';
+import Map from './map';
  
 
 export const AuthContext = React.createContext();
@@ -94,7 +95,7 @@ function App() {
               />
       <Route path='/login' render={() => <Login/>}/>
       <Route path='/home' component={Home}/>
-      <Route path='/create' component={Create}/>
+      <Route path='/create' component={Map}/>
       
     </AuthContext.Provider>
     </Switch>
