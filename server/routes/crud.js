@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const crudController = require('../controllers/crud');
 
-
+debugger;
 router.get('/items', crudController.getItems);
 router.post('/item/create', crudController.createItem);
 router.put('/item/edit', crudController.editItem);

@@ -1,12 +1,12 @@
 import React, {Fragment } from 'react';
-import { NavLink} from 'react-router-dom';
+import { NavLink,useHistory,Redirect} from 'react-router-dom';
 import '../../styles/style.css';
 
 import { AuthContext } from "../../App";
 
 export const Header = () => {
     const { state, dispatch } = React.useContext(AuthContext);
-    
+    const history=useHistory();
     return (
       <nav className="navigation" id="navigation">
         <h1 href="#" className="logo">
@@ -41,6 +41,7 @@ export const Header = () => {
                  dispatch({
                  type: "LOGOUT"
                  })
+                
              }
              >
              {state.isAuthenticated && (

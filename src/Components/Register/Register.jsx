@@ -52,7 +52,7 @@ export const Register = () => {
       })
       .then(resJson => {
         console.log(resJson)
-        debugger;
+       
         dispatch({
             type: "Register",
             payload: resJson

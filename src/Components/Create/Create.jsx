@@ -8,7 +8,7 @@ import '../../styles/style.css';
 export const Create = () => {
   const history=useHistory();
     const {dispatch } = React.useContext(AuthContext);
-   debugger;
+  
     const initialState = {
          
             itemName:"",
@@ -33,6 +33,7 @@ export const Create = () => {
 
   
   const handleFormSubmit = event => {
+    debugger;
       console.log('submit')
     event.preventDefault(History);
     console.log(data)
@@ -42,7 +43,17 @@ export const Create = () => {
       errorMessage: null
     });
     //const isButtonDisabled = data.itemName === "" || data.description === "" || data.imageUrl === "" ||data.price === "" || data.isItemSubmitting;
-debugger;
+    dispatch({
+      type: "ADD_SONG_REQUEST"
+  })
+  // const item = {
+  //   itemName:"",
+  //           description:"",
+  //           imageUrl:"",
+  //           price:"",
+  //           status:"Pending",
+  //           author:sessionStorage.getItem('userId'),
+  // };
     fetch("http://localhost:9999/crud/item/create", {
       method: "post",
       headers: {
@@ -50,13 +61,13 @@ debugger;
       },
       
       body: JSON.stringify({
-         
-        itemName: data.itemName,
-        description: data.description,
-        imageUrl:data.imageUrl,
-        price:data.price,
-        status:data.status,
-        author:data.author
+         data
+        // itemName: data.itemName,
+        // description: data.description,
+        // imageUrl:data.imageUrl,
+        // price:data.price,
+        // status:data.status,
+        // author:data.author
           
       })
       
@@ -70,10 +81,7 @@ debugger;
         throw res;
       })
       .then(resJson => {
-        
-        console.log(resJson)
-        
-        dispatch({
+         dispatch({
             type: "ADD_ITEM_REQUEST",
             payload: resJson
             

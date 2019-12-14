@@ -103,7 +103,7 @@ class App extends Component {
       }).then(rawData => rawData.json())
       .then(responseBody => {
         if (responseBody.username) {
-debugger;
+
           this.setState({
             username: responseBody.username,
             isAdmin: responseBody.isAdmin,

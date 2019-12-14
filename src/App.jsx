@@ -24,8 +24,8 @@ import Map from '../src/map';
 
 
 
-
 export const AuthContext = React.createContext();
+
 //sessionStorage.clear();
 const initialState = {
   isAuthenticated: false,
@@ -34,7 +34,7 @@ const initialState = {
   token: null,
   userId: null
 };
-const history=useHistory();
+
 const reducer = (state, action) => {
 
   switch (action.type) {
@@ -56,12 +56,14 @@ const reducer = (state, action) => {
 
       case "LOGOUT":
         sessionStorage.clear();
-        history.pushState('/')
+        console.log('1')
         return {
           ...state,
           isAuthenticated: false,
             user: null
         }
+       
+        
         
 
               default:
@@ -88,42 +90,16 @@ function App() {
           userId
         }
       })
-      dispatch({
-        type: "FETCH_ITEMS_REQUEST"
-      });
-      fetch("https://hookedbe.herokuapp.com/api/items", {
-        headers: {
-          
-        }
-      })
-        .then(res => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            throw res;
-          }
-        })
-        .then(resJson => {
-          console.log(resJson);
-          dispatch({
-            type: "FETCH_ITEMS_SUCCESS",
-            payload: resJson
-          });
-        })
-        .catch(error => {
-          console.log(error);
-          dispatch({
-            type: "FETCH_ITEMS_FAILURE"
-          });
-        });
+ 
+     
     dispatch({
       type: "ADD_ITEM_REQUEST"
   })
-  debugger;
+ 
   const item = {
     
   };
-fetch("https://hookedbe.herokuapp.com/api/items", {
+  fetch("http://localhost:9999/crud/items", {
     method: "POST",
     headers: {
      
