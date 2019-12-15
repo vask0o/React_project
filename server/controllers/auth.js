@@ -17,24 +17,26 @@ function validateUser(req, res) {
 
 module.exports = {
   signUp: (req, res, next) => {
-     if (validateUser(req, res)) {
-      const {  username, password } = req.body;
+
+    if (validateUser(req, res)) {
+      const {  username, password,email } = req.body;
       const salt = encryption.generateSalt();
       const hashedPassword = encryption.generateHashedPassword(salt, password);
       User.create({ 
-        
+        email,
         hashedPassword,
         username,
         salt
       }).then((user) => {
         res.status(201)
-          .json({ message: 'success', userId: user._id, username: user.username });
+          .json({ message: 'User created!', userId: user._id, username: user.username });
       })
       .catch((error) => {
         if (!error.statusCode) {
           error.statusCode = 500;
         }
-         next(error);
+
+        next(error);
       });
     }
   },
@@ -48,21 +50,23 @@ module.exports = {
           error.statusCode = 401;
           throw error;
         }
+
         if(!user.authenticate(password)) {
           const error = new Error('Invalid password');
           error.statusCode = 401;
           throw error;
         }
+
         const token = jwt.sign({ 
           username: user.username,
           userId: user._id.toString()
-        },
-          'parola',
-         { expiresIn: '1h' });
+        }
+        , 'somesupersecret'
+        , { expiresIn: '1h' });
 
          res.status(200).json(
            { 
-             message: 'logged in!', 
+             message: 'User successfully logged in!', 
              token, 
              userId: user._id.toString(),
              username: user.username,

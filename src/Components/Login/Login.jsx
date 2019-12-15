@@ -1,120 +1,42 @@
-import React from 'react';
-import { withRouter,useHistory, } from 'react-router-dom';
+import React, { Component, Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
+import '../../styles/style.css';
 
-import { AuthContext } from "../../App";
+class Login extends Component {
 
-export const Login = () => {
-  let history = useHistory()
-  const { dispatch } = React.useContext(AuthContext);
-  const initialState = {
-    username:"",
-    password: "",
-    isSubmitting: false,
-    isAdmin:false,
-    errorMessage: null
-  };
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: null,
+            password: null,
 
-  const [data, setData] = React.useState(initialState);
-
-  const handleInputChange = event => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.value
-    });
-  };
-
-  const handleFormSubmit = event => {
-    event.preventDefault(History);
-    
-    setData({
-      ...data,
-      isSubmitting: true,
-      errorMessage: null
-    });
-    fetch("http://localhost:9999/auth/signin", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      
-      body: JSON.stringify({
-        username: data.username,
-        password: data.password
-      })
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
         }
-        throw res;
-      })
-      .then(resJson => {
-        console.log(resJson)
-        
-        dispatch({
-            type: "LOGIN",
-            payload: resJson
-            
-        })
-       
-        history.push('/home')
-       
-      })
-      
-      .catch(error => {
-        setData({
-          ...data,
-          isSubmitting: false,
-          errorMessage: error.message || error.statusText
-        });
-      });
-  };
+        this.handleChange = props.handleChange.bind(this);
+    }
 
-  return (
-    <div className="login-container">
-      <div className="card">
-        <div className="container">
-          <form onSubmit={handleFormSubmit}>
-            <h1>Login</h1>
+    render() {
+        if (this.props.isLogged) {
+            return (
+                <Redirect to="/" />
+            )
+        }
+        return (
+            <Fragment>
+                <form onSubmit={(e) => this.props.handleSubmit(e, this.state, false)}>
+                    <div className="login">
+                        <h1>Log In</h1>
+                        <span>Username</span>
+                        <input type="text" onChange={this.handleChange} name="username" placeholder="Enter username" />
+                        <span>Password</span>
+                        <input type="password" onChange={this.handleChange} name="password" placeholder="Enter password" />
+                        <button>Log In</button>
+                    </div>
+                </form>
+                
+            </Fragment>
 
-            <label htmlFor="username">
-              username 
-              <input
-                type="text"
-                value={data.username}
-                onChange={handleInputChange}
-                name="username"
-                id="username"
-              />
-            </label>
+        )
+    }
+}
 
-            <label htmlFor="password">
-              Password
-              <input
-                type="password"
-                value={data.password}
-                onChange={handleInputChange}
-                name="password"
-                id="password"
-              />
-            </label>
-
-            {data.errorMessage && (
-              <span className="form-error">{data.errorMessage}</span>
-            )}
-
-            <button disabled={data.isSubmitting}>
-              {data.isSubmitting ? (
-                <p>loading</p>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default withRouter(Login);
+export default Login;

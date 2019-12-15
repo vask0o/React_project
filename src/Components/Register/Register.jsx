@@ -1,131 +1,43 @@
-import React from 'react';
-import { withRouter,useHistory, } from 'react-router-dom';
-import { AuthContext } from "../../App";
+import React, { Component, Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
+import '../../styles/style.css';
 
-export const Register = () => {
-  let history = useHistory()
-  const { dispatch } = React.useContext(AuthContext);
-  const initialState = {
-    username:"",
-    password: "",
-    isSubmitting: false,
-    isAdmin:false,
-    errorMessage: null
-  };
+class Register extends Component {
 
-  const [data, setData] = React.useState(initialState);
-
-  const handleInputChange = event => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.value
-    });
-  };
-
-  const handleFormSubmit = event => {
-    event.preventDefault();
-    
-    setData({
-      ...data,
-      isSubmitting: true,
-      errorMessage: null
-    });
-    if(data.password!==data.repeatPassword){
-        data.errorMessage='Passwords should be the same'
-    }
-    fetch("http://localhost:9999/auth/signup", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      
-      body: JSON.stringify({
-        username: data.username,
-        password: data.password
-      })
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: null,
+            password: null,
+            email: null
         }
-        throw res;
-      })
-      .then(resJson => {
-        console.log(resJson)
-       
-        dispatch({
-            type: "Register",
-            payload: resJson
-            
-        })
-         history.push('/home')
-       
-      })
-      
-      .catch(error => {
-        setData({
-          ...data,
-          isSubmitting: false,
-          errorMessage: error.message || error.statusText
-        });
-      });
-  };
+        this.handleChange = props.handleChange.bind(this);
+    }
 
-  return (
-    <div className="login-container">
-      <div className="card">
-        <div className="container">
-          <form onSubmit={handleFormSubmit}>
-            <h1>Login</h1>
+    render() {
+        if (this.props.isLogged) {
+            return (
+                <Redirect to="/" />
+            )
+        }
+        return (
+            <Fragment>
+                <form onSubmit={(e) => this.props.handleSubmit(e, this.state, true)}>
+                    <div className="register">
+                        <h1>Register</h1>
+                        <span className="reg-info">Create your account.It`s free and takes only a minute.</span>
+                        <span>Username</span>
+                        <input type="text" onChange={this.handleChange} name="username" placeholder="Enter username" />
+                        <span>Email</span>
+                        <input type="email" onChange={this.handleChange} name="email" placeholder="Enter e-mail" />
+                        <span>Password</span>
+                        <input type="password" onChange={this.handleChange} name="password" placeholder="Enter password" />
+                        <button>Register</button>
+                    </div>
+                </form>
+            </Fragment>
+        )
+    }
+}
 
-            <label htmlFor="username">
-              username 
-              <input
-                type="text"
-                value={data.username}
-                onChange={handleInputChange}
-                name="username"
-                id="username"
-              />
-            </label>
-
-            <label htmlFor="password">
-              Password
-              <input
-                type="password"
-                value={data.password}
-                onChange={handleInputChange}
-                name="password"
-                id="password"
-              />
-            </label>
-            <label htmlFor="repeatPassword">
-              Password
-              <input
-                type="password"
-                value={data.repeatPassword}
-                onChange={handleInputChange}
-                name="repeatPassword"
-                id="repeatPassword"
-              />
-            </label>
-
-            {data.errorMessage && (
-              <span className="form-error">{data.errorMessage}</span>
-            )}
-
-            <button disabled={data.isSubmitting}>
-              {data.isSubmitting ? (
-                <p>loading</p>
-              ) : (
-                "Register"
-              )}
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default withRouter(Register);
+export default Register;

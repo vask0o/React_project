@@ -32,7 +32,12 @@ const initialState = {
   isAdmin: false,
   username: null,
   token: null,
-  userId: null
+  userId: null,
+  items:[],
+  isFetching: true,
+  hasError: false,
+  isItemSubmitting: false,
+  itemHasError: false,
 };
 
 const reducer = (state, action) => {
@@ -62,7 +67,44 @@ const reducer = (state, action) => {
           isAuthenticated: false,
             user: null
         }
+       case "FETCH_ITEMS_REQUEST":
+        return {
+          ...state,
+          isFetching: true,
+          hasError: false
+        };
+      case "FETCH_ITEMS_SUCCESS":
+        return {
+          ...state,
+          isFetching: false,
+          items: action.payload
+          
+        };
+      case "FETCH_ITEMS_FAILURE":
+        return {
+          ...state,
+          hasError: true,
+          isFetching: false
+        };
        
+        case "ADD_ITEM_REQUEST":
+              return {
+                ...state,
+                isItemSubmitting: true,
+                itemHasError: false,
+              }
+            case "ADD_ITEM_SUCCESS":
+              return {
+                ...state,
+                isItemSubmitting: false,
+                items: [...state.items, action.payload]
+              }
+            case "ADD_ITEM_FAILURE":
+              return {
+                ...state,
+                isItemSubmitting: false,
+                itemHasError: true,
+              }
         
         
 
@@ -75,6 +117,37 @@ function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   React.useEffect(() => {
+    dispatch({
+      type: "FETCH_ITEMS_REQUEST"
+    });
+    fetch("http://localhost:9999/crud/items", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw res;
+        }
+      })
+      .then(resJson => {
+        console.log(resJson);
+        dispatch({
+          type: "FETCH_ITEMS_SUCCESS",
+          payload: resJson
+          
+        });
+        
+      })
+      .catch(error => {
+        console.log(error);
+        dispatch({
+          type: "FETCH_ITEMS_FAILURE"
+        });
+      });
   
     const username = sessionStorage.getItem('username')
     const token = sessionStorage.getItem('token')
