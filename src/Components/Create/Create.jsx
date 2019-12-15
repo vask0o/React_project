@@ -33,8 +33,7 @@ export const Create = () => {
 
   
   const handleFormSubmit = event => {
-    debugger;
-      console.log('submit')
+   
     event.preventDefault(History);
     console.log(data)
     setData({

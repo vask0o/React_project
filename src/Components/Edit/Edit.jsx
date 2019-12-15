@@ -2,80 +2,130 @@ import React, { Component, Fragment } from 'react';
 import { toast } from 'react-toastify';
 import '../../styles/style.css';
 import {withRouter} from 'react-router-dom'
-class Edit extends Component {
+import {ItemContext} from '../Home/Home'
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            itemName: '',
-            description: '',
-            imageUrl: '',
-            price: ''
-        }
-        this.handleChange = props.handleChange.bind(this);
-    }
 
-    render() {
-        let currentProduct = {};
+ const Initial=(()=>{
 
-        this.props.items.forEach(element => {
-            if (element._id === this.props.match.params.id) {
-                currentProduct = element;
-                return;
-            }
+ })
+export const Edit=(()=>{
+    
+    const [data, setData] = React.useState();
+    let id=window.location.pathname.split('/')[2]
+    fetch(`http://localhost:9999/crud/itemOne/${id}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json"
+      },
+    }).then(rawData => rawData.json())
+      .then(body => {
+          setData(body[0])
+      
+      }
+      );
+      const handleInputChange = event => {
+        setData({
+          ...data,
+          [event.target.name]: event.target.value
         });
+      };
+   
 
-        let editItem = (e, data) => {
-            e.preventDefault();
-            data._id = this.props.match.params.id;
+  
+    
 
-            data.itemName = data.itemName ? data.itemName : currentProduct.itemName;
-            data.description = data.description ? data.description : currentProduct.description;
-            data.imageUrl = data.imageUrl ? data.imageUrl : currentProduct.imageUrl;
-            data.price = data.price ? data.price : currentProduct.price;
-
-            fetch('http://localhost:9999/crud/item/edit', {
-                method: "PUT",
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json', }
-
-            })
-                .then(responseBody => {
-                    if (!responseBody.errors) {
-                        toast.success("item edited successfully", {
-                            closeButton: false,
-                        })
-                        this.props.history.push('/')
-                    } else {
-                        toast.error("Something went wrong", {
-                            closeButton: false,
-                        })
-                    }
-                })
-
+    
+  
+  
+  
+  const handleFormSubmit = event => {
+    event.preventDefault(History);
+    fetch(`http://localhost:9999/crud/edit/${id}`, {  
+       
+        body: JSON.stringify(data),
+        
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json'
         }
+       
+      }).then(res => res.json())
+  }
 
+    
         return (
-            <Fragment>
+            
+                
+            
+
                 <div className="edit-item">
-                    <form onSubmit={(e) => editItem(e, this.state)}>
-                        <h1>Edit item</h1>
-                        <span>item name</span>
-                        <input type="text" onChange={this.handleChange} placeholder={`${currentProduct.itemName}`} readOnly={false} name="itemName" />
-                        <span>Description</span>
-                        <input type="text" onChange={this.handleChange} placeholder={`${currentProduct.description}`} name="description" />
-                        <span>Image Url</span>
-                        <input type="text" onChange={this.handleChange} placeholder={`${currentProduct.imageUrl}`} name="imageUrl" />
-                        <span>Price</span>
-                        <input type="text" onChange={this.handleChange} placeholder={`${currentProduct.price}`} name="price" />
-                        <button >Edit item</button>
-                    </form>
-
-                </div>
-            </Fragment>
-
-        )
-    }
+                {!data ? <div><h1>load</h1></div>:
+                       <form  onSubmit={handleFormSubmit} className="modal-form">
+                       <div className="modal-form-inputs">
+       
+                       <label htmlFor="itemName">itemName</label>
+                           <input
+                           id="itemName"
+                           name="itemName"
+                           type="text"
+                           value={data.itemName}
+                           onChange={handleInputChange}
+                           className="text-input"
+                           />
+       
+                       <label htmlFor="description">description</label>
+                           <input
+                           id="description"
+                           name="description"
+                           type="text"
+                           value={data.description}
+                           onChange={handleInputChange}
+                           className="text-input"
+                           />
+       
+                       <label htmlFor="imageUrl">Image URL</label>
+                           <input
+                           id="imageUrl"
+                           name="imageUrl"
+                           type="text"
+                           value={data.imageUrl}
+                           onChange={handleInputChange}
+                           className="text-input"
+                           />
+                       </div>
+                       <div>
+                       <label htmlFor="price">price</label>
+                           <input
+                           id="price"
+                           name="price"
+                           type="text"
+                           value={data.price}
+                           onChange={handleInputChange}
+                           className="text-input"
+                           />
+                       </div>
+                        <div className="form-error">
+                             <p>
+                             {data.errorMessage && (
+                     <span className="form-error">{data.errorMessage}</span>
+                   )}
+                             </p>
+                       </div>
+                       <div className="form-action clearfix">
+                       <button disabled={data.isSubmitting}>
+                     {data.isSubmitting ? (
+                       <p>loading</p>
+                     ) : (
+                       "ADD_ITEM_REQUEST"
+                     )}
+                   </button>
+                          
+                       </div>
+                     </form>
 }
+               </div>
+            
+      );
+})
 
 export default withRouter(Edit);

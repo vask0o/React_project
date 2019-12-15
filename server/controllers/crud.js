@@ -2,8 +2,14 @@ const Item = require('../models/Item');
 
 
 module.exports = {
-
+  getItemOne: (req, res, next) => {
+    const id = req.params.id;
+    Item.find({ _id: id })
+        .then((car) => res.send(car))
+        .catch(next);
+},
   getItems: (req, res) => {
+    
     Item.find()
       .then((items) => {
         res

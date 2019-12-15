@@ -1,12 +1,13 @@
 import React,{Fragment} from "react";
 import {withRouter,NavLink} from 'react-router-dom';
 import { AuthContext } from "../../App";
+
 export const ItemContext = React.createContext();
 
 const initialState = {
          
   items:[],
-  isFetching: false,
+  isFetching: true,
   hasError: false,
   isItemSubmitting: false,
   itemHasError: false,
@@ -59,13 +60,13 @@ const reducer=(state,action)=>{
 
 export const Home = () => {
  // const [data, setData] = React.useState();
-  const { auth } = React.useContext(AuthContext);
+  const { state:auth } = React.useContext(AuthContext);
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  debugger;
+  
   
 
   React.useEffect(() => {
-    
+    console.log('here')
     dispatch({
       type: "FETCH_ITEMS_REQUEST"
     });
@@ -99,8 +100,6 @@ export const Home = () => {
       });
   
   },[]);
-  console.log('1')
-console.log(state)
   return (
     <Fragment>
     <ItemContext.Provider value={{
@@ -118,9 +117,10 @@ console.log(state)
         <span className="loader">LOADING...</span>
       ) : state.hasError ? (
         <span className="error">AN ERROR HAS OCCURED</span>
-      ) : (
+      ) :
+       (
         <>
-          {state.items.map(item => (
+          {state.items.items.map(item => (
 
 <div className="single-item" key={item._id}>
     <img src={item.imageUrl} />
@@ -130,24 +130,26 @@ console.log(state)
         <span className="boldText">Price</span>
         <span className="item-price">{item.price}</span>
         {
-            this.props.isAdmin ?
-                (
+            
+                
                     <Fragment>
-                        <NavLink to="/edit" className="editButton" to={`edit/${item._id}`}>Edit</NavLink>
+                        <NavLink   className="editButton" to={`edit/${item._id}`}>Edit</NavLink>
                         <button className="deleteButton" type="submit">Delete</button>
-                    </Fragment>
-                )
-                :
+                   
+                
+                
                 <div className="userOrdDetailsBtns">
                     <NavLink className="orderBtn1" to={`order/${item._id}`}>Order</NavLink>
                     <NavLink className="orderBtn" to={`details/${item._id}`}>Details</NavLink>
                 </div>
+                </Fragment>
         }
     </div>
 </div>
 ))}
         </>
-      )}
+      )
+      }
     </div>
                     </section>
                 </main>
@@ -159,4 +161,4 @@ console.log(state)
   );
 };
 
-export default withRouter(Home);
+export default (Home);

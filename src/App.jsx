@@ -56,7 +56,7 @@ const reducer = (state, action) => {
 
       case "LOGOUT":
         sessionStorage.clear();
-        console.log('1')
+
         return {
           ...state,
           isAuthenticated: false,
@@ -75,7 +75,7 @@ function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   React.useEffect(() => {
-    console.log(state)
+  
     const username = sessionStorage.getItem('username')
     const token = sessionStorage.getItem('token')
     const isAdmin = sessionStorage.getItem('isAdmin')
@@ -96,8 +96,7 @@ function App() {
       type: "ADD_ITEM_REQUEST"
   })
  
-  const item = {
-    
+  const item = {   
   };
   fetch("http://localhost:9999/crud/items", {
     method: "POST",
@@ -158,7 +157,8 @@ function App() {
       <Route path='/create' component={Create}/>
       <Route path='/register' component={Register}/>
       <Route path='/details' component={Map}/>
-
+      <Route path='/edit' component={Edit}
+                    />} />
       
     </AuthContext.Provider>
     </Switch>
