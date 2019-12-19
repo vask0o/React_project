@@ -1,120 +1,108 @@
 import React from 'react';
-import { withRouter,useHistory, } from 'react-router-dom';
+import {withRouter, useHistory} from 'react-router-dom';
 
-import { AuthContext } from "../../App";
+import {AuthContext} from "../../App";
 
 export const Login = () => {
-  let history = useHistory()
-  const { dispatch } = React.useContext(AuthContext);
-  const initialState = {
-    username:"",
-    password: "",
-    isSubmitting: false,
-    isAdmin:false,
-    errorMessage: null
-  };
+    let history = useHistory()
+    const {dispatch} = React.useContext(AuthContext);
+    const initialState = {
+        username: "",
+        password: "",
+        isSubmitting: false,
+        isAdmin: false,
+        errorMessage: null
+    };
 
-  const [data, setData] = React.useState(initialState);
+    const [data, setData] = React.useState(initialState);
 
-  const handleInputChange = event => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.value
-    });
-  };
-
-  const handleFormSubmit = event => {
-    event.preventDefault(History);
-    
-    setData({
-      ...data,
-      isSubmitting: true,
-      errorMessage: null
-    });
-    fetch("http://localhost:9999/auth/signin", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      
-      body: JSON.stringify({
-        username: data.username,
-        password: data.password
-      })
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw res;
-      })
-      .then(resJson => {
-        console.log(resJson)
-        
-        dispatch({
-            type: "LOGIN",
-            payload: resJson
-            
-        })
-       
-        history.push('/home')
-       
-      })
-      
-      .catch(error => {
+    const handleInputChange = event => {
         setData({
-          ...data,
-          isSubmitting: false,
-          errorMessage: error.message || error.statusText
+            ...data,
+            [event.target.name]: event.target.value
         });
-      });
-  };
+    };
 
-  return (
-    <div className="login-container">
-      <div className="card">
-        <div className="container">
-          <form onSubmit={handleFormSubmit}>
-            <h1>Login</h1>
+    const isButtonDisabled = data.password === "" || data.username === "" ;
 
-            <label htmlFor="username">
-              username 
-              <input
-                type="text"
-                value={data.username}
-                onChange={handleInputChange}
-                name="username"
-                id="username"
-              />
-            </label>
+    const handleFormSubmit = event => {
+        event.preventDefault(History);
 
-            <label htmlFor="password">
-              Password
-              <input
-                type="password"
-                value={data.password}
-                onChange={handleInputChange}
-                name="password"
-                id="password"
-              />
-            </label>
+        setData({
+            ...data,
+            isSubmitting: true,
+            errorMessage: null
+        });
+        fetch("http://localhost:9999/auth/signin", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-            {data.errorMessage && (
-              <span className="form-error">{data.errorMessage}</span>
-            )}
+            body: JSON.stringify({username: data.username, password: data.password})
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw res;
+            })
+            .then(resJson => {
+                console.log(resJson)
 
-            <button disabled={data.isSubmitting}>
-              {data.isSubmitting ? (
-                <p>loading</p>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </form>
+                dispatch({type: "LOGIN", payload: resJson})
+
+                history.push('/home')
+
+            })
+            .catch(error => {
+                setData({
+                    ...data,
+                    isSubmitting: false,
+                    errorMessage: error.message || error.statusText
+                });
+            });
+    };
+
+    return (
+        <div className="login-container">
+            <div className="card">
+                <div className="container">
+                  
+                    <form onSubmit={handleFormSubmit}>
+                        <h1>Login</h1>
+                        {isButtonDisabled ? <h1>Please fill your crendetials</h1>:<h1></h1>}
+
+                        <label htmlFor="username">
+                            username
+                            <input
+                                type="text"
+                                value={data.username}
+                                onChange={handleInputChange}
+                                name="username"
+                                id="username"/>
+                        </label>
+
+                        <label htmlFor="password">
+                            Password
+                            <input
+                                type="password"
+                                value={data.password}
+                                onChange={handleInputChange}
+                                name="password"
+                                id="password"/>
+                        </label>
+
+                        {data.errorMessage && (<span className="form-error">{data.errorMessage}</span>)}
+      
+                        <button disabled={isButtonDisabled}>
+                            { ("Login")}
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default withRouter(Login);

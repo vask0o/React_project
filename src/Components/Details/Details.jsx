@@ -5,15 +5,18 @@ import '../../styles/style.css';
 
 class Details extends Component {
     
+    componentDidMount(){
+        
+        console.log(this.props)
+    }
     render() {
         
-        let currentProduct = {};
-        this.props.items.forEach(element => {
-            if (element._id === this.props.match.params.id) {
-                currentProduct = element;
-                return;
-            }
-        });
+        
+        let currentProduct =this.props.location.state.item
+        console.log(currentProduct)
+        
+        
+        
         function decisionItem(id,status) {
             
             let data = {
@@ -49,6 +52,7 @@ class Details extends Component {
                 <div className="details-img">
                     <img src={currentProduct.imageUrl} alt='pic' />
                 </div>
+                <p className="product-name">{currentProduct.itemName}</p>
                 
                 <p className="product-description">{currentProduct.description}</p>
                 {this.props.isAdmin ? 
@@ -56,7 +60,7 @@ class Details extends Component {
                 
                 <button className="approveButton" onClick={() => { decisionItem(`${this.currentProduct.id}`,`Approved`)}} type="submit">Approve</button>
                 <button className="rejectButton" type="submit">Reject</button>
-            </Fragment>  : <NavLink to="/" className="continue-shopping1">Back to menu</NavLink> 
+            </Fragment>  : <NavLink to="/home" className="continue-shopping1">Back to menu</NavLink> 
             }
                 
             </div>

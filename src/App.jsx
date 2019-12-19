@@ -1,14 +1,5 @@
-import React, {
-  Fragment
-} from 'react';
-import {
-  Route,
-  BrowserRouter as Router,
-  useHistory,
-  Switch,
-  withRouter
-} from 'react-router-dom';
-
+import React, {Fragment} from 'react';
+import {Route, BrowserRouter as Router, useHistory, Switch, withRouter} from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
@@ -22,150 +13,102 @@ import Footer from './Components/Footer/Footer';
 import Details from './Components/Details/Details';
 import Map from '../src/map';
 
-
-
 export const AuthContext = React.createContext();
 
 //sessionStorage.clear();
 const initialState = {
-  isAuthenticated: false,
-  isAdmin: false,
-  username: null,
-  token: null,
-  userId: null
+    isAuthenticated: false,
+    isAdmin: false,
+    username: null,
+    token: null,
+    userId: null
 };
 
 const reducer = (state, action) => {
 
-  switch (action.type) {
-    case "LOGIN":
+    switch (action.type) {
+        case "LOGIN":
 
-      sessionStorage.setItem("username", (action.payload.username));
-      sessionStorage.setItem("token", (action.payload.token));
-      sessionStorage.setItem("isAdmin", (action.payload.isAdmin));
-      sessionStorage.setItem("userId", (action.payload.userId));
+            sessionStorage.setItem("username", (action.payload.username));
+            sessionStorage.setItem("token", (action.payload.token));
+            sessionStorage.setItem("isAdmin", (action.payload.isAdmin));
+            sessionStorage.setItem("userId", (action.payload.userId));
 
-      return {
-        ...state,
-        isAuthenticated: true,
-          username: action.payload.username,
-          token: action.payload.token,
-          isAdmin: action.payload.isAdmin,
-          userId: action.payload.userId
-      }
+            return {
+                ...state,
+                isAuthenticated: true,
+                username: action.payload.username,
+                token: action.payload.token,
+                isAdmin: action.payload.isAdmin,
+                userId: action.payload.userId
+            }
 
-      case "LOGOUT":
-        sessionStorage.clear();
+        case "LOGOUT":
+            sessionStorage.clear();
 
-        return {
-          ...state,
-          isAuthenticated: false,
-            user: null
-        }
-       
-        
-        
+            return {
+                ...state,
+                isAuthenticated: false,
+                user: null
+            }
 
-              default:
-                return state;
-  }
+        default:
+            return state;
+    }
 };
 
 function App() {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+    const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  React.useEffect(() => {
-  
-    const username = sessionStorage.getItem('username')
-    const token = sessionStorage.getItem('token')
-    const isAdmin = sessionStorage.getItem('isAdmin')
-    const userId = sessionStorage.getItem('userId')
-    if (username && token) {
-      dispatch({
-        type: 'LOGIN',
-        payload: {
-          username,
-          token,
-          isAdmin,
-          userId
-        }
-      })
- 
-     
-    dispatch({
-      type: "ADD_ITEM_REQUEST"
-  })
- 
-  const item = {   
-  };
-  fetch("http://localhost:9999/crud/items", {
-    method: "POST",
-    headers: {
-     
-      "Content-Type": `application/json`
-    },
-    body: JSON.stringify(item),
-  })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        throw res;
-      }
-    })
-    .then(data => {
-        
-        dispatch({
-            type: "ADD_ITEM_SUCCESS",
-            payload: data
-        })
-       
-    })
-    .catch(error => {
-        dispatch({
-            type: "ADD_ITEM_FAILURE"
-        })
-    })
-  
+    React.useEffect(() => {
 
-  }
-}, [])
-  return (
-    <Fragment>
-    <Router>
-      <Switch>
-    <AuthContext.Provider
-      value={{
-        state,
-        dispatch
-      }}
-      
-    >
-      
-      <Header />
-     
-   
-      <Router {...state.isAuthenticated}
-      
-                exact
-                path="/register"
-                component={Home}
-                isAuthenticated
-              />
-      <Route path='/login' render={() => <Login/>}/>
-      <Route path='/home' component={Home}/>
-      <Route path='/create' component={Create}/>
-      <Route path='/register' component={Register}/>
-      <Route path='/details' component={Map}/>
-      <Route path='/edit' component={Edit}
-                    />} />
-      
-    </AuthContext.Provider>
-    </Switch>
-    </Router>
-    <Footer />
+        const username = sessionStorage.getItem('username')
+        const token = sessionStorage.getItem('token')
+        const isAdmin = sessionStorage.getItem('isAdmin')
+        const userId = sessionStorage.getItem('userId')
+        if (username && token) {
+            dispatch({
+                type: 'LOGIN',
+                payload: {
+                    username,
+                    token,
+                    isAdmin,
+                    userId
+                }
+            })
+
+          }
+    }, [])
+    return (<Fragment>
+        <Router>
+            <Switch>
+                <AuthContext.Provider
+                    value={{
+                        state,
+                        dispatch
+                    }}>
+
+                    <Header/>
+
+                    <Router
+                        {...state.isAuthenticated}
+                        exact="exact"
+                        path="/register"
+                        component={Home}
+                        isAuthenticated="isAuthenticated"/>
+                    <Route path='/login' render={() => <Login/>}/>
+                    <Route path='/home' component={Home}/>
+                    <Route path='/create'  component={Create}/>
+                    <Route path='/register' component={Register}/>
+                    <Route path='/details'  component={Details}/>
+                    <Route path='/edit' component={Edit}/>
+
+                </AuthContext.Provider>
+            </Switch>
+        </Router>
+        <Footer/>
     </Fragment>
-  );
+    );
 }
 
 

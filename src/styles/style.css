@@ -152,6 +152,15 @@ main section div img {
     padding: 0.3rem 0.4rem;
     border-radius: 0.2rem;
 }
+.create-item button:disabled{
+   
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+
+    
+}
+
 
 .login input, .register input, .create-item input, .edit-item input, .orders input {
     margin-bottom: 1rem;

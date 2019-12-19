@@ -8,7 +8,7 @@ module.exports = {
         .then((car) => res.send(car))
         .catch(next);
 },
-  getItems: (req, res) => {
+  getItems: (req, res,next) => {
     
     Item.find()
       .then((items) => {
@@ -25,7 +25,7 @@ module.exports = {
   },
   
   createItem: (req, res) => {
-    
+    debugger;
     const itemObj = req.body;
     Item.create(itemObj)
       .then((item) => {
@@ -56,6 +56,7 @@ module.exports = {
       })
   },
   editItem: (req, res) => {
+    debugger;
     let query = { '_id': req.body._id };
     let newData = {
       itemName: req.body.itemName,
