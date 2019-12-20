@@ -1,21 +1,12 @@
 import React, { Component } from 'react'
 import { Map, GoogleApiWrapper ,Marker} from 'google-maps-react';
-import Geocode from "react-geocode";
-Geocode.setApiKey('AIzaSyCTQRH_nOlyGBZlg4NhsUBPLypwRROTNRw');
-Geocode.setLanguage("en");
+
 
 export class MapContainer extends Component {
   constructor(props) {
     super(props);
-    Geocode.fromAddress("Varna").then(
-      response => {
-        const { lat, lng } = response.results[0].geometry.location;
-        console.log(lat, lng);
-      },
-      error => {
-        console.error(error);
-      }
-    );
+    
+   
     this.state = {
       lat:42.6670987, lng:23.3516777
     }

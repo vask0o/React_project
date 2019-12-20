@@ -26,7 +26,7 @@ export const Edit = ((props) => {
                 'Content-type': 'application/json'
             }
 
-        }).then(res => res.json(history.push('/home')) )
+        }).then(res => res.json(history.render('/')) )
     }
 
     return (

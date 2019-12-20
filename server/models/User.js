@@ -8,6 +8,10 @@ const userSchema = new Schema({
     type: Schema.Types.String,
     required: true
   },
+  location: {
+    type: Schema.Types.String,
+    required: true
+  },
   username: {
     type: Schema.Types.String,
     required: true,
@@ -17,7 +21,7 @@ const userSchema = new Schema({
     type: Schema.Types.String,
     required: true
   },
-  roles: [{type: Schema.Types.String, required: true}],
+  isAdmin: [{type: Schema.Types.String, required: true}],
 
 
 });

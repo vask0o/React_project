@@ -14,7 +14,7 @@ export const Register = () => {
     };
 
     const [data, setData] = React.useState(initialState);
-    const isButtonDisabled = data.password === "" || data.username === ""
+    const isButtonDisabled = data.password === "" || data.username === "" ||data.location===""
     const checkPassword=data.password !== data.repeatPassword
 
     const handleInputChange = event => {
@@ -39,7 +39,7 @@ export const Register = () => {
                 "Content-Type": "application/json"
             },
 
-            body: JSON.stringify({username: data.username, password: data.password})
+            body: JSON.stringify({username: data.username, password: data.password,location:data.location,isAdmin:'false'})
         })
             .then(res => {
                 if (res.ok) {
@@ -98,6 +98,15 @@ export const Register = () => {
                                 onChange={handleInputChange}
                                 name="repeatPassword"
                                 id="repeatPassword"/>
+                        </label>
+                        <label htmlFor="location">
+                            location
+                            <input
+                                type="text"
+                                value={data.location}
+                                onChange={handleInputChange}
+                                name="location"
+                                id="location"/>
                         </label>
 
                         {data.errorMessage && (<span className="form-error">{data.errorMessage}</span>)}

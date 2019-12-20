@@ -22,7 +22,7 @@ export const Home = () => {
         query={status:'Pending'}
   
       }
-      console.log(query);
+    
       const res = await axios.get('http://localhost:9999/crud/items',
       {params:{query}})
       
@@ -79,22 +79,21 @@ loadData()
                                     <span className="item-price">{item.price}</span>
                                     <span className="boldText">Status</span>
                                     <span className="item-price">{item.status}</span>
-                                    {
-                                        authState.isAuthenticated&&item.author===authState.userId ?(
+                                    { authState.isAdmin==='true' ?
+                                            <div className="userOrdDetailsBtns">
+                                            <Link className="orderBtn" to={{pathname:`details/${item._id}`,state:{item:item,isAdmin:authState.isAdmin}}}>Details</Link>
+                                           </div>
+                                            
+                                    :
+                                        (item.author===authState.userId ?(
                                             
                                                 <Fragment>
                                                     <button className="deleteButton" onClick={() => { deleteItem(`${item._id}`) }} type="submit">Delete</button>
                                                     <Link  className="editButton"  to={{pathname:`edit/${item._id}`,state:{item:item},isAdmin:authState.isAdmin}}>Edit</Link>
                                                  </Fragment>
-                                            ):
-                                            
-                                            (<Fragment>
-                                              {authState.isAdmin===true ?
-                                            <div className="userOrdDetailsBtns">
-                                            <Link className="orderBtn" to={{pathname:`details/${item._id}`,state:{item:item,isAdmin:authState.isAdmin}}}>Details</Link>
-                                           </div>:<p></p>}
-                                             </Fragment>)
-                                    }
+                                            ):null)
+                                         } 
+                                             
                                 </div>
                             </div>
                         )):<p>Please Login</p>}

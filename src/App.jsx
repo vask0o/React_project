@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    Route,
-    Redirect,
-    
-    Switch
-    
-} from 'react-router-dom';
+import {Route, Redirect, Switch} from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
@@ -17,8 +11,9 @@ import Create from './Components/Create/Create';
 import Edit from './Components/Edit/Edit';
 import Footer from './Components/Footer/Footer';
 import Details from './Components/Details/Details';
+import Map from './Components/Profile/Profile';
 import PageNotFound from './Components/NotFound/NotFound';
-import Map from '../src/map';
+
 
 //sessionStorage.clear();
 const initialState = {
@@ -26,14 +21,16 @@ const initialState = {
     isAdmin: false,
     username: null,
     token: null,
-    userId: null
+    userId: null,
+    location: null
 };
 
 const reducer = (state, action) => {
 
     switch (action.type) {
         case "LOGIN":
-
+            console.log(action.payload)
+            sessionStorage.setItem("location", (action.payload.location))
             sessionStorage.setItem("username", (action.payload.username));
             sessionStorage.setItem("token", (action.payload.token));
             sessionStorage.setItem("isAdmin", (action.payload.isAdmin));
@@ -45,7 +42,8 @@ const reducer = (state, action) => {
                 username: action.payload.username,
                 token: action.payload.token,
                 isAdmin: action.payload.isAdmin,
-                userId: action.payload.userId
+                userId: action.payload.userId,
+                location: action.payload.location
             }
 
         case "LOGOUT":
@@ -66,7 +64,7 @@ function App() {
     const [state, dispatch] = React.useReducer(reducer, initialState);
 
     React.useEffect(() => {
-
+        const location = sessionStorage.getItem('location')
         const username = sessionStorage.getItem('username')
         const token = sessionStorage.getItem('token')
         const isAdmin = sessionStorage.getItem('isAdmin')
@@ -78,7 +76,8 @@ function App() {
                     username,
                     token,
                     isAdmin,
-                    userId
+                    userId,
+                    location
                 }
             })
 
@@ -86,51 +85,51 @@ function App() {
     }, [])
     debugger;
     return (
-        
-            
-                <Switch>
-                    <AuthContext.Provider
-                        value={{
-                            state,
-                            dispatch
-                        }}>
 
-                        <Header/>
-                        
-                        
-                        <Route exact path='/home' render={() => <Home/>}/>
-                        <Route path='/register' render={() => <Register/>}/> 
-                        <Route path='/my' component={Map}/> 
-                        {
-                            !state.isAuthenticated
-                                ? <Route exact path="/login"      component={Login}/>
-                                : <Redirect to='/home'/>
-                        }
-                        {
-                            state.isAuthenticated
-                                ? <Route exact path="/create"      component={Create}/>
-                                : <Redirect to='/login'/>
-                        }
-                        {
-                            state.isAuthenticated
-                                ? <Route path="/edit"      component={Edit}/>
-                                : <Redirect to='/login'/>
-                        }
-                        {
-                            state.isAuthenticated
-                                ? <Route path="/details"      component={Details}/>
-                                : <Redirect to='/login'/>
-                        }
-                
-                    </AuthContext.Provider>
-                    <Route component={PageNotFound} />
-                    
+        <Switch>
+            <AuthContext.Provider
+                value={{
+                    state,
+                    dispatch
+                }}>
+
+                <Header/>
+
+                <Route exact="exact" path='/home' render={() => <Home/>}/>
+                <Route path='/register' render={() => <Register/>}/>
+                <Route path='/my' component={Map}/> {
+                    !state.isAuthenticated
+                        ? <Route exact="exact" path="/login" component={Login}/>
+                        : <Redirect to='/home'/>
+                }
+                {
+                    state.isAuthenticated
+                        ? <Route exact="exact" path="/create" component={Create}/>
+                        : <Redirect to='/login'/>
+                }
+                {
+                    state.isAuthenticated
+                        ? <Route path="/edit" component={Edit}/>
+                        : <Redirect to='/login'/>
+                }
+                {
+                    state.isAuthenticated
+                        ? <Route path="/profile" component={Map}/>
+                        : <Redirect to='/login'/>
+                }
+                {
+                    state.isAuthenticated
+                        ? <Route path="/details" component={Details}/>
+                        : <Redirect to='/login'/>
+                }
+
+            </AuthContext.Provider>
+            <Route component={PageNotFound}/>
+
             <Footer/>
-            
-                </Switch>
-         
-            
-                
+
+        </Switch>
+
     );
 }
 

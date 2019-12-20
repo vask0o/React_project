@@ -23,7 +23,7 @@ export const Header = () => {
                      <NavLink to="/create">Create</NavLink>
                  </li>
                  <li>
-                     <NavLink to="/my">My</NavLink>
+                     <NavLink to="/profile">Profile</NavLink>
                  </li>
              </Fragment>
          )

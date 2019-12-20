@@ -49,6 +49,7 @@ export const Login = () => {
             })
             .then(resJson => {
                 console.log(resJson)
+                console.log('here')
 
                 dispatch({type: "LOGIN", payload: resJson})
 
