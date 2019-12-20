@@ -34,6 +34,7 @@ export const Edit = ((props) => {
     return (
 
         <div className="edit-item">
+            {isButtonDisabled ? <h1>Please fill the form</h1>:null}
             {
                 !data
                     ? <div>

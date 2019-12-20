@@ -160,6 +160,14 @@ main section div img {
 
     
 }
+.modal-form button:disabled{
+   
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  
+      
+  }
 
 
 .login input, .register input, .create-item input, .edit-item input, .orders input {
