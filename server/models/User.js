@@ -32,21 +32,21 @@ userSchema.method({
 
 const User = mongoose.model('User', userSchema);
 
-User.seedAdminUser = async () => {
-  try {
-    let users = await User.find();
-    if (users.length > 0) return;
-    const salt = encryption.generateSalt();
-    const hashedPassword = encryption.generateHashedPassword(salt, '123456');
-    return User.create({
-      username: 'Admin',
-      salt,
-      hashedPassword,
-      roles: ['Admin']
-    });
-  } catch (e) {
-    console.log(e);
-  }
-};
+// User.seedAdminUser = async () => {
+//   try {
+//     let users = await User.find();
+//     if (users.length > 0) return;
+//     const salt = encryption.generateSalt();
+//     const hashedPassword = encryption.generateHashedPassword(salt, '123456');
+//     return User.create({
+//       username: 'Admin',
+//       salt,
+//       hashedPassword,
+//       roles: ['Admin']
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 
 module.exports = User;

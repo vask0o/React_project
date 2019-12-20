@@ -1,27 +1,47 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect ,useState} from 'react';
 import axios from 'axios'
 import { NavLink,withRouter,Link } from 'react-router-dom';
 import {  toast } from 'react-toastify';
+import { AuthContext } from "../../App";
 import '../../styles/style.css';
 
-class Home extends Component {
-  
-  
-  constructor() {
-    super();
-    this.state = { data: [] };
-  }
 
-  componentDidMount(){
-    this.getData();
- }
- async getData(){
-  const res = await axios.get('http://localhost:9999/crud/items');
-  const { data } = await res;
-  this.setState({data: data})
-}
+export const Home = () => {
+  const [data, setData] = useState({ items: [] });
+  const { state:authState} = React.useContext(AuthContext);
+  
+ 
+  useEffect(()=>{
+    if (!authState.isAuthenticated) {return;}
+    const loadData=async()=>{
+      let query={
+        status:'Approved',
+        id:authState.userId
+      }
+      if(authState.isAdmin==='true'){
+        query={status:'Pending'}
+  
+      }
+      console.log(query);
+      const res = await axios.get('http://localhost:9999/crud/items',
+      {params:{query}})
+      
+      setData(res.data)
+    }
+    
+    
+    
+    
+    
+  
+loadData()
+     
 
-    render() {
+    
+},[authState.isAuthenticated])
+
+
+    
 
         function deleteItem(id) {
             let requestBody = {
@@ -48,30 +68,31 @@ class Home extends Component {
                 
                 <main>
                     <section>
-                        {this.state.data.items? this.state.data.items.map(item => (
+                        {authState.isAuthenticated&&data.items? data.items.map(item => (
 
                             <div className="single-item" key={item._id}>
-                                <img src={item.imageUrl} />
+                                <img src={item.imageUrl}  alt="imgUrl"/>
                                 <span className="boldText">Product</span>
                                 <span className="item-name">{item.itemName}</span>
                                 <div className="item-details">
                                     <span className="boldText">Price</span>
                                     <span className="item-price">{item.price}</span>
+                                    <span className="boldText">Status</span>
+                                    <span className="item-price">{item.status}</span>
                                     {
-                                        !this.props.isAdmin ?(
+                                        authState.isAuthenticated&&item.author===authState.userId ?(
                                             
                                                 <Fragment>
-                                                    <Link className="orderBtn" to={{pathname:`details/${item._id}`,state:{item:item}}}>Details</Link>
-                                                    <Link  className="editButton"  to={{pathname:`edit/${item._id}`,state:{item:item}}}>Edit</Link>
+                                                    <button className="deleteButton" onClick={() => { deleteItem(`${item._id}`) }} type="submit">Delete</button>
+                                                    <Link  className="editButton"  to={{pathname:`edit/${item._id}`,state:{item:item},isAdmin:authState.isAdmin}}>Edit</Link>
                                                  </Fragment>
                                             ):
                                             
                                             (<Fragment>
+                                              {authState.isAdmin===true ?
                                             <div className="userOrdDetailsBtns">
-                                                  <button className="deleteButton" onClick={() => { deleteItem(`${item._id}`) }} type="submit">Delete</button>
-                                                
-                                                   <NavLink className="orderBtn" to={`details/${item._id}`}>Details</NavLink>
-                                            </div>
+                                            <Link className="orderBtn" to={{pathname:`details/${item._id}`,state:{item:item,isAdmin:authState.isAdmin}}}>Details</Link>
+                                           </div>:<p></p>}
                                              </Fragment>)
                                     }
                                 </div>
@@ -84,7 +105,7 @@ class Home extends Component {
                 </footer>
             </Fragment>
         )
-    }
+    
 }
 
 export default withRouter(Home);

@@ -9,7 +9,7 @@ router.post('/signup',
    
     body('password')
       .trim()
-      .isLength({ min: 5 })
+      .isLength({ min: 3 })
       .withMessage('Please enter a valid password.'),
     body('username')
       .trim()

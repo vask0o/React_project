@@ -69,8 +69,8 @@ export const Register = () => {
                 <div className="container">
                     <form onSubmit={handleFormSubmit}>
                         <h1>Login</h1>
-                      {isButtonDisabled ? <h1>Please fill the register form</h1>:<h1></h1>}
-                      {checkPassword ? <h1>Passwords should be the same</h1>:<h1></h1>}
+                      {isButtonDisabled ? <h1>Please fill the register form</h1>:<h1> </h1>}
+                      {checkPassword ? <h1>Passwords should be the same</h1>:<h1> </h1>}
                         <label htmlFor="username">
                             username
                             <input

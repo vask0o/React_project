@@ -3,14 +3,35 @@ const Item = require('../models/Item');
 
 module.exports = {
   getItemOne: (req, res, next) => {
-    const id = req.params.id;
-    Item.find({ _id: id })
-        .then((car) => res.send(car))
-        .catch(next);
+    debugger;
+    let query = { '_id': req.body._id };
+    let status = req.body.status
+    Item.findOneAndUpdate(query, {$set:{status}}, function (err, doc) {
+      if (err) {
+        console.log(err)
+        return res.send(500, { error: err });
+      }
+      return res.send("success");
+    })
+      .then((item) => {
+        res.status(200)
+          .json({
+            message: 'success!',
+            item
+          })
+      })
+      .catch((error) => {
+        if (!error.statusCode) {
+          error.statusCode = 500;
+        }
+      });
+  
 },
   getItems: (req, res,next) => {
-    
-    Item.find()
+    let query=JSON.parse(req.query.query)
+    let author=query.id
+    let status=query.status
+    Item.find({$or:[{author},{status}]})
       .then((items) => {
         res
           .status(200)
@@ -56,7 +77,6 @@ module.exports = {
       })
   },
   editItem: (req, res) => {
-    debugger;
     let query = { '_id': req.body._id };
     let newData = {
       itemName: req.body.itemName,

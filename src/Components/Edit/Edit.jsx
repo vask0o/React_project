@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from 'react';
-import {toast} from 'react-toastify';
+import React  from 'react';
+
 import '../../styles/style.css';
 import {withRouter,useHistory} from 'react-router-dom'
 

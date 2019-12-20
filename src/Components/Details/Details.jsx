@@ -1,6 +1,5 @@
 import React, { Component,Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
-import {  toast } from 'react-toastify';
+import { NavLink, } from 'react-router-dom';
 import '../../styles/style.css';
 
 class Details extends Component {
@@ -10,40 +9,33 @@ class Details extends Component {
         console.log(this.props)
     }
     render() {
-        
+        const { history } = this.props;
         
         let currentProduct =this.props.location.state.item
-        console.log(currentProduct)
+        console.log(history)
         
         
         
         function decisionItem(id,status) {
-            
+            debugger
             let data = {
-                _id: id,
+                _id:id,
                 status:status
             }
-            
-            
-            fetch('http://localhost:9999/crud/item/edit', {
-                method: "PUT",
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json', }
+            debugger;
+            fetch(`http://localhost:9999/crud/itemOne/${data._id}`, {
 
-            })
-                .then(responseBody => {
-                    if (!responseBody.errors) {
-                        toast.success("item edited successfully", {
-                            closeButton: false,
-                        })
-                        this.props.history.push('/')
-                    } else {
-                        toast.error("Something went wrong", {
-                            closeButton: false,
-                        })
-                    }
-                })
-            this.props.history.push('/Home') 
+            body: JSON.stringify(data),
+
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json'
+            }
+
+        }).then(res => res.json(
+           history.push('/home')
+        ) )
+            
         }
 
         return (
@@ -55,11 +47,11 @@ class Details extends Component {
                 <p className="product-name">{currentProduct.itemName}</p>
                 
                 <p className="product-description">{currentProduct.description}</p>
-                {this.props.isAdmin ? 
+                {this.props.location.state.isAdmin==='true' ? 
             <Fragment>
                 
-                <button className="approveButton" onClick={() => { decisionItem(`${this.currentProduct.id}`,`Approved`)}} type="submit">Approve</button>
-                <button className="rejectButton" type="submit">Reject</button>
+                <button className="approveButton" onClick={() => { decisionItem(`${currentProduct._id}`,`Approved`)}} type="submit">Approve</button>
+                <button className="rejectButton"onClick={() => { decisionItem(`${currentProduct._id}`,`Rejected`)}} type="submit">Reject</button>
             </Fragment>  : <NavLink to="/home" className="continue-shopping1">Back to menu</NavLink> 
             }
                 

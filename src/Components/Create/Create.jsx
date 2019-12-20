@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, {Fragment } from 'react';
+import {useHistory} from 'react-router-dom'
 import '../../styles/style.css';
 import {  toast } from 'react-toastify';
 
 export const Create = (() => {
-
+  const history=useHistory()
   const initial = {
     itemName: '',
     description: '',
@@ -37,8 +38,8 @@ const handleCreateSubmit = event => {
     .then(rawData => rawData.json())
     .then(responseBody => {
         if (!responseBody.errors) {
-            toast.success(responseBody.message, {closeButton: false})
-          ;
+             history.push('/home')
+          
 
         } else {
             toast.error(responseBody.message, {closeButton: false})
@@ -66,4 +67,4 @@ const handleCreateSubmit = event => {
         )
     })
 
-export default Create;
+export default Create; 

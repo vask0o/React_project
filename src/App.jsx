@@ -1,5 +1,11 @@
-import React, {Fragment} from 'react';
-import {Route, BrowserRouter as Router, useHistory, Switch, withRouter} from 'react-router-dom';
+import React from 'react';
+import {
+    Route,
+    Redirect,
+    
+    Switch
+    
+} from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
@@ -11,9 +17,8 @@ import Create from './Components/Create/Create';
 import Edit from './Components/Edit/Edit';
 import Footer from './Components/Footer/Footer';
 import Details from './Components/Details/Details';
+import PageNotFound from './Components/NotFound/NotFound';
 import Map from '../src/map';
-
-export const AuthContext = React.createContext();
 
 //sessionStorage.clear();
 const initialState = {
@@ -56,7 +61,7 @@ const reducer = (state, action) => {
             return state;
     }
 };
-
+export const AuthContext = React.createContext();
 function App() {
     const [state, dispatch] = React.useReducer(reducer, initialState);
 
@@ -77,39 +82,56 @@ function App() {
                 }
             })
 
-          }
+        }
     }, [])
-    return (<Fragment>
-        <Router>
-            <Switch>
-                <AuthContext.Provider
-                    value={{
-                        state,
-                        dispatch
-                    }}>
+    debugger;
+    return (
+        
+            
+                <Switch>
+                    <AuthContext.Provider
+                        value={{
+                            state,
+                            dispatch
+                        }}>
 
-                    <Header/>
-
-                    <Router
-                        {...state.isAuthenticated}
-                        exact="exact"
-                        path="/register"
-                        component={Home}
-                        isAuthenticated="isAuthenticated"/>
-                    <Route path='/login' render={() => <Login/>}/>
-                    <Route path='/home' component={Home}/>
-                    <Route path='/create'  component={Create}/>
-                    <Route path='/register' component={Register}/>
-                    <Route path='/details'  component={Details}/>
-                    <Route path='/edit' component={Edit}/>
-
-                </AuthContext.Provider>
-            </Switch>
-        </Router>
-        <Footer/>
-    </Fragment>
+                        <Header/>
+                        
+                        
+                        <Route exact path='/home' render={() => <Home/>}/>
+                        <Route path='/register' render={() => <Register/>}/> 
+                        <Route path='/my' component={Map}/> 
+                        {
+                            !state.isAuthenticated
+                                ? <Route exact path="/login"      component={Login}/>
+                                : <Redirect to='/home'/>
+                        }
+                        {
+                            state.isAuthenticated
+                                ? <Route exact path="/create"      component={Create}/>
+                                : <Redirect to='/login'/>
+                        }
+                        {
+                            state.isAuthenticated
+                                ? <Route path="/edit"      component={Edit}/>
+                                : <Redirect to='/login'/>
+                        }
+                        {
+                            state.isAuthenticated
+                                ? <Route path="/details"      component={Details}/>
+                                : <Redirect to='/login'/>
+                        }
+                
+                    </AuthContext.Provider>
+                    <Route component={PageNotFound} />
+                    
+            <Footer/>
+            
+                </Switch>
+         
+            
+                
     );
 }
 
-
-  export default withRouter(App)
+export default App
