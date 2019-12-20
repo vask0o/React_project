@@ -22,9 +22,9 @@ const handleChange = event => {
   });
 };
 
-const isButtonDisabled = data.itemName === "" || data.description === "" || data.imageUrl === "" ||data.price === "";
-debugger;
-console.log(isButtonDisabled)
+    const isButtonDisabled = data.itemName === "" || data.description === "" || data.imageUrl === "" ||data.price === "";
+
+
 const handleCreateSubmit = event => {
     event.preventDefault();
   fetch('http://localhost:9999/crud/item/create', {

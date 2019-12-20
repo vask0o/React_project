@@ -1,11 +1,11 @@
 import React  from 'react';
 
 import '../../styles/style.css';
-import {withRouter,useHistory} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 
 
 export const Edit = ((props) => {
-  const history=useHistory()
+  
     const [data, setData] = React.useState(props.location.state.item);
     
     const handleInputChange = event => {
@@ -14,8 +14,9 @@ export const Edit = ((props) => {
             [event.target.name]: event.target.value
         });
     };
-
+    const isButtonDisabled = data.itemName === "" || data.description === "" || data.imageUrl === "" ||data.price === "";
     const handleFormSubmit = event => {
+        
         event.preventDefault();
         fetch(`http://localhost:9999/crud/item/edit/${data._id}`, {
 
@@ -26,7 +27,8 @@ export const Edit = ((props) => {
                 'Content-type': 'application/json'
             }
 
-        }).then(res => res.json(history.render('/')) )
+        }).then(res => res.json() )
+        { window.location.href = 'http://localhost:3000'; }
     }
 
     return (
@@ -37,7 +39,7 @@ export const Edit = ((props) => {
                     ? <div>
                             <h1>load</h1>
                         </div>
-                    : <form onSubmit={handleFormSubmit} className="modal-form">
+                    : <form onSubmit={handleFormSubmit} className="create-item">
                             <div className="modal-form-inputs">
 
                                 <label htmlFor="itemName">itemName</label>
@@ -83,11 +85,9 @@ export const Edit = ((props) => {
                                 </p>
                             </div>
                             <div className="form-action clearfix">
-                                <button disabled={data.isSubmitting}>
+                                <button disabled={isButtonDisabled}>
                                     {
-                                        data.isSubmitting
-                                            ? (<p>loading</p>)
-                                            : ("ADD_ITEM_REQUEST")
+                                      <p>Edit Item</p>
                                     }
                                 </button>
 

@@ -12,7 +12,7 @@ class Details extends Component {
         const { history } = this.props;
         
         let currentProduct =this.props.location.state.item
-        console.log(history)
+     
         
         
         

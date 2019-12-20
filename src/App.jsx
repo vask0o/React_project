@@ -95,16 +95,16 @@ function App() {
 
                 <Header/>
 
-                <Route exact="exact" path='/home' render={() => <Home/>}/>
-                <Route path='/register' render={() => <Register/>}/>
+                <Route path='/home' component={Home}/>
+                <Route path='/register' component={Register}/>
                 <Route path='/my' component={Map}/> {
                     !state.isAuthenticated
-                        ? <Route exact="exact" path="/login" component={Login}/>
+                        ? <Route exact path="/login" component={Login}/>
                         : <Redirect to='/home'/>
                 }
                 {
                     state.isAuthenticated
-                        ? <Route exact="exact" path="/create" component={Create}/>
+                        ? <Route exact path="/create" component={Create}/>
                         : <Redirect to='/login'/>
                 }
                 {

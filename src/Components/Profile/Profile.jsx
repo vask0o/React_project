@@ -34,7 +34,7 @@ export class MapContainer extends Component {
   }
 
   displayMarkers = () => {
-    console.log('marker')
+    
     
       return <Marker position={{
         lat:this.state.lat,

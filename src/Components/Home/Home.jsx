@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect ,useState} from 'react';
 import axios from 'axios'
-import { NavLink,withRouter,Link } from 'react-router-dom';
+import {withRouter,Link } from 'react-router-dom';
 import {  toast } from 'react-toastify';
 import { AuthContext } from "../../App";
 import '../../styles/style.css';
@@ -89,7 +89,8 @@ loadData()
                                             
                                                 <Fragment>
                                                     <button className="deleteButton" onClick={() => { deleteItem(`${item._id}`) }} type="submit">Delete</button>
-                                                    <Link  className="editButton"  to={{pathname:`edit/${item._id}`,state:{item:item},isAdmin:authState.isAdmin}}>Edit</Link>
+                                                    {item.status!=='Approved' ?
+                                                    <Link  className="editButton"  to={{pathname:`edit/${item._id}`,state:{item:item},isAdmin:authState.isAdmin}}>Edit</Link>:null}
                                                  </Fragment>
                                             ):null)
                                          } 

@@ -4,7 +4,7 @@ import {withRouter, useHistory} from 'react-router-dom';
 import {AuthContext} from "../../App";
 
 export const Login = () => {
-    let history = useHistory()
+   
     const {dispatch} = React.useContext(AuthContext);
     const initialState = {
         username: "",
@@ -49,11 +49,10 @@ export const Login = () => {
             })
             .then(resJson => {
                 console.log(resJson)
-                console.log('here')
-
+                
                 dispatch({type: "LOGIN", payload: resJson})
 
-                history.push('/home')
+                { window.location.href = 'http://localhost:3000'; }
 
             })
             .catch(error => {
