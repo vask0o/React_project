@@ -17,18 +17,21 @@ function validateUser(req, res) {
 
 module.exports = {
   signUp: (req, res, next) => {
+    debugger;
      if (validateUser(req, res)) {
-      const {  username, password } = req.body;
+      const {  username, password,location,isAdmin } = req.body;
       const salt = encryption.generateSalt();
       const hashedPassword = encryption.generateHashedPassword(salt, password);
       User.create({ 
         
         hashedPassword,
         username,
-        salt
+        location,
+        salt,
+        isAdmin
       }).then((user) => {
         res.status(201)
-          .json({ message: 'success', userId: user._id, username: user.username });
+          .json({ message: 'success', userId: user._id, username: user.username,location:user.location });
       })
       .catch((error) => {
         if (!error.statusCode) {
@@ -59,14 +62,17 @@ module.exports = {
         },
           'parola',
          { expiresIn: '1h' });
-
+        debugger
          res.status(200).json(
            { 
-             message: 'logged in!', 
+             
+             message: 'logged in!',
+             
              token, 
+             location:user.location,
              userId: user._id.toString(),
              username: user.username,
-             isAdmin: user.roles.indexOf('Admin') != -1
+             isAdmin: user.isAdmin
            });
       })
       .catch(error => {

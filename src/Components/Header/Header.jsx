@@ -1,46 +1,61 @@
-import React, { Component, Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, {Fragment } from 'react';
+import { NavLink} from 'react-router-dom';
 import '../../styles/style.css';
 
-class Register extends Component {
-    render() {
-        return (
-            <Fragment>
-                <header>
-                    <nav className="navigation">
-                        <h2>OLX</h2>
-                        <ul>
-                            <li><NavLink exact to="/">Home</NavLink></li>
-                            {this.props.isLogged ?
-                                (
-                                    <Fragment>
-                                        <li>
-                                            <NavLink to="/create">Create</NavLink>
-                                        </li>
-                                       
-                                    </Fragment>
-                                )
+import { AuthContext } from "../../App";
 
-                                : null}
-                            {
-                                this.props.username ? (
-                                    <Fragment>
-                                        <li><NavLink to="/" onClick={this.props.logout}>Logout</NavLink></li>
-                                        <li className="logged-username">Welcome {this.props.username}!</li>
-                                    </Fragment>
-                                )
-                                    :
-                                    (<Fragment>
-                                        <li><NavLink to="/register">Register</NavLink></li>
-                                        <li><NavLink to="/login">Login</NavLink></li>
-                                    </Fragment>)
-                            }
-                        </ul>
-                    </nav>
-                </header>
-            </Fragment>
-        )
-    }
-}
+export const Header = () => {
+   
+    const { state, dispatch } = React.useContext(AuthContext);
+    
+    
+    return (
+      <nav className="navigation" id="navigation">
+        <h1 href="#" className="logo">
+          HOOKED
+        </h1>
+        <ul>
+     <li><NavLink exact to="/home">Home</NavLink></li>
+     {state.isAuthenticated ?
+         (
+             <Fragment>
+                 <li>
+                     <NavLink to="/create">Create</NavLink>
+                 </li>
+                 <li>
+                     <NavLink to="/profile">Profile</NavLink>
+                 </li>
+             </Fragment>
+         )
 
-export default Register;
+         : null}
+     {state.isAuthenticated ? (
+             <Fragment>
+                 <li className="logged-username">Welcome {state.username}!</li>
+             </Fragment>
+         )
+             :
+             (<Fragment>
+                 <li><NavLink to="/register">Register</NavLink></li>
+                 <li><NavLink to="/login">Login</NavLink></li>
+             </Fragment>)
+     }
+        </ul>
+             <button
+             onClick={() =>
+                 dispatch({
+                 type: "LOGOUT"
+                 })
+                
+             }
+             >
+             {state.isAuthenticated && (
+                 <h1>Hi {state.username} (LOGOUT)</h1>
+             )}
+             </button>
+         </nav>
+         );
+     };
+
+
+  export default Header;

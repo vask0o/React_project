@@ -2,14 +2,14 @@ const router = require('express').Router();
 const { body } = require('express-validator/check');
 const authController = require('../controllers/auth');
 const User = require('../models/User');
-debugger;
+
 router.post('/signup', 
   [
     
    
     body('password')
       .trim()
-      .isLength({ min: 5 })
+      .isLength({ min: 3 })
       .withMessage('Please enter a valid password.'),
     body('username')
       .trim()
