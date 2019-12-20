@@ -39,7 +39,7 @@ export const Edit = ((props) => {
                     ? <div>
                             <h1>load</h1>
                         </div>
-                    : <form onSubmit={handleFormSubmit} className="create-item">
+                    : <form onSubmit={handleFormSubmit} className="modal-form">
                             <div className="modal-form-inputs">
 
                                 <label htmlFor="itemName">itemName</label>
